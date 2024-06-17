@@ -18,8 +18,18 @@ ATeamBaseZone::ATeamBaseZone()
 	PrimaryActorTick.bCanEverTick = true;
 
     CollisionComponent->InitSphereRadius(400.0f);
-    
-	TeamID = ETeamID::NoTeam;
+
+    static ConstructorHelpers::FObjectFinder<UStaticMesh> DefaultZoneMesh(TEXT("/Game/CTF/Meshes/Cylinder.Cylinder"));
+    ZoneMeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("ZoneMeshComponent"));
+    ZoneMeshComponent->SetupAttachment(RootComponent);
+	
+    if (DefaultZoneMesh.Succeeded())
+    {
+        ZoneMeshComponent->SetStaticMesh(DefaultZoneMesh.Object);
+        ZoneMeshComponent->SetRelativeScale3D(FVector(8.0f, 8.0f, 0.1f));
+    }
+
+    TeamMeshComponents.AddUnique(ZoneMeshComponent);
 }
 
 // Called when the game starts or when spawned

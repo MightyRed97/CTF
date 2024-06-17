@@ -11,6 +11,11 @@ ADroppedFlagActor::ADroppedFlagActor()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
+	FlagMeshComponent1->SetRelativeLocation(FVector(0.f, 0.f, -20.f));
+	FlagMeshComponent2->SetRelativeLocation(FVector(0.f, 0.f, -20.f));
+
+	TeamMeshComponents.AddUnique(FlagMeshComponent2);
+	ApplyTeamMaterial();
 }
 
 // Called when the game starts or when spawned

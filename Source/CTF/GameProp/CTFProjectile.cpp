@@ -24,7 +24,7 @@ ACTFProjectile::ACTFProjectile()
     CollisionComponent->OnComponentHit.AddDynamic(this, &ACTFProjectile::OnHit);
     RootComponent = CollisionComponent;
 
-    static ConstructorHelpers::FObjectFinder<UStaticMesh> DefaultMesh(TEXT("/Game/CTF/Meshes/Shape_Sphere.Shape_Sphere"));
+    static ConstructorHelpers::FObjectFinder<UStaticMesh> DefaultMesh(TEXT("/Game/CTF/Meshes/SM_Projectile.SM_Projectile"));
     StaticMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Mesh"));
     StaticMesh->SetupAttachment(RootComponent);
 

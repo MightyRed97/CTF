@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 
-#include "GameProp/ReplicatedCollisionActor.h"
+#include "GameProp/TeamActor.h"
 #include "CTFEnum.h"
 
 #include "FlagActor.generated.h"
@@ -14,7 +14,7 @@ class USphereComponent;
 DECLARE_LOG_CATEGORY_EXTERN(LogFlag, Log, All);
 
 UCLASS()
-class CTF_API AFlagActor : public AReplicatedCollisionActor
+class CTF_API AFlagActor : public ATeamActor
 {
 	GENERATED_BODY()
 	
@@ -30,15 +30,8 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 
 public:
-	UFUNCTION(BlueprintPure, Category = Team)
-	FORCEINLINE ETeamID GetTeamID() const { return TeamID; }
-
-	UFUNCTION(BlueprintCallable, Category = Team)
-	void SetTeamID(ETeamID ID);
-
 
 protected:
 	void OnActorOverlapBeginWithAuth(AActor* OtherActor) override;
@@ -46,9 +39,11 @@ protected:
 
 public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Components)
-	UStaticMeshComponent* StaticMeshComponent;
+	UStaticMeshComponent* FlagMeshComponent1;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Components)
+	UStaticMeshComponent* FlagMeshComponent2;
 
 protected:
-	UPROPERTY(Replicated, EditAnywhere, BlueprintReadWrite, Category = Team)
-	TEnumAsByte<ETeamID> TeamID;
+
 };

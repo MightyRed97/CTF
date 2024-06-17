@@ -5,14 +5,14 @@
 #include "CoreMinimal.h"
 
 #include "CTFEnum.h"
-#include "GameProp/ReplicatedCollisionActor.h"
+#include "GameProp/TeamActor.h"
 
 #include "TeamBaseZone.generated.h"
 
 DECLARE_LOG_CATEGORY_EXTERN(LogBaseZone, Log, All);
 
 UCLASS()
-class CTF_API ATeamBaseZone : public AReplicatedCollisionActor
+class CTF_API ATeamBaseZone : public ATeamActor
 {
 	GENERATED_BODY()
 	
@@ -30,9 +30,6 @@ public:
 
 
 public:
-	UFUNCTION(BlueprintPure, Category = Team)
-	FORCEINLINE ETeamID GetTeamID() const { return TeamID; };
-
 	UFUNCTION(BlueprintCallable, Category = Flag)
 	void AddTeamScore();
 
@@ -41,9 +38,6 @@ protected:
 
 
 public:
-	
-
-protected:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Team)
-	TEnumAsByte<ETeamID> TeamID;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Components)
+	UStaticMeshComponent* ZoneMeshComponent;
 };

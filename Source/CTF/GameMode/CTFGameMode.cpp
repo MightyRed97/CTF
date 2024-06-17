@@ -72,6 +72,8 @@ void ACTFGameMode::PostLogin(APlayerController* NewPlayer)
         {
             PlayerStates.Add(CTFPlayerState);
         }
+
+        DestroyPossessedPawn(CTFPlayerController);
     }
 }
 
@@ -92,11 +94,7 @@ void ACTFGameMode::SpawnCharacterBySelectedTeam(ACTFPlayerController* CTFPlayerC
 {
     if (!CTFPlayerController) return;
 
-    if (APawn* Pawn = CTFPlayerController->GetPawn())
-    {
-        CTFPlayerController->UnPossess();
-        Pawn->Destroy();
-    }
+    DestroyPossessedPawn(CTFPlayerController);
 
     FVector SpawnLocation = FVector::ZeroVector;
     FRotator SpawnRotation = FRotator::ZeroRotator;
@@ -223,11 +221,7 @@ void ACTFGameMode::EndMatch()
 
     for (ACTFPlayerController* CTFPlayerController : PlayerControllers)
     {
-        if (APawn* Pawn = CTFPlayerController->GetPawn())
-        {
-            CTFPlayerController->UnPossess();
-            Pawn->Destroy();
-        }
+        DestroyPossessedPawn(CTFPlayerController);
         
         if (ACTFPlayerState* CTFPlayerState = Cast<ACTFPlayerState>(CTFPlayerController->PlayerState))
         {
@@ -249,5 +243,14 @@ void ACTFGameMode::EndMatch()
 
             CTFPlayerController->MatchEnded(MatchResult);
         }
+    }
+}
+
+void ACTFGameMode::DestroyPossessedPawn(APlayerController* PlayerController)
+{
+    if (APawn* Pawn = PlayerController->GetPawn())
+    {
+        PlayerController->UnPossess();
+        Pawn->Destroy();
     }
 }

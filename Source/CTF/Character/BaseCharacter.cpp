@@ -137,6 +137,8 @@ void ABaseCharacter::SpawnDroppedFlag()
             Location.Z = 0.0f;
             FlagTransform.SetLocation(Location);
             UGameplayStatics::FinishSpawningActor(SpawnDroppedFlagActor, FlagTransform);
+
+            SpawnDroppedFlagActor->ApplyTeamMaterial();
         }
     }
 }

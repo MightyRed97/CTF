@@ -55,6 +55,9 @@ protected:
 	UFUNCTION(BlueprintCallable, Category = Time)
 	void EndMatch();
 
+	UFUNCTION(BlueprintCallable, Category = Time)
+	void DestroyPossessedPawn(APlayerController* PlayerController);
+
 
 public:
 
