@@ -4,6 +4,10 @@
 #include "UI/PlayerHUD.h"
 #include "Components/TextBlock.h"
 
+#include "GameMode/CTFPlayerController.h"
+#include "Character/BaseCharacter.h"
+#include "Character/CharInfoComponent.h"
+
 void UPlayerHUD::UpdateTeamScore(ETeamID TeamID, int32 Score)
 {
     FName TeamScoreTextBlockName;
@@ -69,4 +73,20 @@ void UPlayerHUD::ShowMatchResult(EMatchResult MatchResult)
     {
         ResultWidget->SetVisibility(ESlateVisibility::Visible);
     }
+}
+
+float UPlayerHUD::GetHealthPercent() const
+{
+    if (ACTFPlayerController* CTFPlayerController = Cast<ACTFPlayerController>(GetOwningPlayer()))
+    {
+        if (ABaseCharacter* BaseCharacter = Cast<ABaseCharacter>(CTFPlayerController->GetPawn()))
+        {
+            if (BaseCharacter->CharInfoComponent)
+            {
+                return BaseCharacter->CharInfoComponent->GetCurrentHealth() / BaseCharacter->CharInfoComponent->GetMaxHealth();
+            }
+        }
+    }
+
+    return 0.0f;
 }

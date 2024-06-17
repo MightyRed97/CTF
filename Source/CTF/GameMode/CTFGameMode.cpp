@@ -8,12 +8,10 @@
 #include "Kismet/KismetSystemLibrary.h"
 #include "GameFramework/PlayerStart.h"
 
-#include "GameMode/CTFHUD.h"
 #include "GameMode/CTFPlayerState.h"
 #include "GameMode/CTFGameState.h"
 #include "GameMode/CTFPlayerController.h"
 #include "Character/CTFCharacter.h"
-
 
 DEFINE_LOG_CATEGORY(LogCTFGameMode);
 
@@ -26,7 +24,6 @@ ACTFGameMode::ACTFGameMode()
         CTFCharacterClass = PlayerPawnBPClass.Class;
 	}
 
-	HUDClass = ACTFHUD::StaticClass();
     PlayerControllerClass = ACTFPlayerController::StaticClass();
 	GameStateClass = ACTFGameState::StaticClass();
 	PlayerStateClass = ACTFPlayerState::StaticClass();

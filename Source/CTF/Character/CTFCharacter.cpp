@@ -76,7 +76,7 @@ void ACTFCharacter::BeginPlay()
 
 void ACTFCharacter::OnHoldingFlagChanged(bool bIsHoldingFlag)
 {
-	// GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red, "CTFCharacter Holding Flag");
+	// if (GEngine) GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red, "CTFCharacter Holding Flag");
 
 	if (UPlayerTagWidget* PlayerTagWidget = Cast<UPlayerTagWidget>(PlayerTagWidgetComponent->GetUserWidgetObject()))
 	{

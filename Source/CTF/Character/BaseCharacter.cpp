@@ -78,19 +78,19 @@ void ABaseCharacter::OnHealthChanged(float CurrentHealth)
     if (IsLocallyControlled())
     {
         FString healthMessage = FString::Printf(TEXT("You now have %f health remaining."), CurrentHealth);
-        GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, healthMessage);
+        if (GEngine) GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, healthMessage);
 
         if (CurrentHealth <= 0)
         {
             FString deathMessage = FString::Printf(TEXT("You have been killed."));
-            GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, deathMessage);
+            if (GEngine) GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, deathMessage);
         }
     }
 
     if (HasAuthority())
     {
         FString healthMessage = FString::Printf(TEXT("%s now has %f health remaining."), *GetFName().ToString(), CurrentHealth);
-        GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, healthMessage);
+        if (GEngine) GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, healthMessage);
     }
 }
 
@@ -162,7 +162,7 @@ void ABaseCharacter::ResetCanFire()
 
 void ABaseCharacter::OnHoldingFlagChanged(bool bIsHoldingFlag)
 {
-    // GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red, TEXT("BaseCharacter Holding Flag"));
+    // if (GEngine) GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red, TEXT("BaseCharacter Holding Flag"));
 }
 
 void ABaseCharacter::HandleFire_Implementation()

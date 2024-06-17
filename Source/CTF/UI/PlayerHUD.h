@@ -18,12 +18,15 @@ class CTF_API UPlayerHUD : public UUserWidget
 	GENERATED_BODY()
 	
 public:
-	UFUNCTION(BlueprintCallable, Category = "Score")
+	UFUNCTION(BlueprintCallable, Category = "Team | Score")
 	void UpdateTeamScore(ETeamID TeamID, int32 Score);
 
-	UFUNCTION(BlueprintCallable, Category = "Kill")
+	UFUNCTION(BlueprintCallable, Category = "Team | Kill")
 	void UpdateTeamKill(ETeamID TeamID, int32 Kill);
 
-	UFUNCTION(BlueprintCallable, Category = "Result")
+	UFUNCTION(BlueprintCallable, Category = "Match Result")
 	void ShowMatchResult(EMatchResult MatchResult);
+
+	UFUNCTION(BlueprintCallable, Category = Health)
+	float GetHealthPercent() const;
 };
