@@ -55,12 +55,6 @@ public:
 	UFUNCTION(BlueprintCallable, Category = Flag)
 	void SetHoldingFlag(bool bIsHolding, ETeamID TeamID);
 
-	//UFUNCTION(BlueprintPure, Category = "Base Zone")
-	//FORCEINLINE bool IsBaseZoneEntered() const { return bIsBaseZoneEntered; }
-
-	//UFUNCTION(BlueprintCallable, Category = "Base Zone")
-	//void SetBaseZoneEntered(bool bIsEntered);
-
 protected:
 	UFUNCTION()
 	void OnRep_CurrentHealth();
@@ -100,7 +94,4 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, ReplicatedUsing = OnRep_HoldingFlag, Category = Flag)
 	bool bIsHoldingFlag;
-
-	//UPROPERTY(EditAnywhere, BlueprintReadWrite, ReplicatedUsing = OnRep_BaseZoneEntered, Category = "Base Zone")
-	//bool bIsBaseZoneEntered;
 };

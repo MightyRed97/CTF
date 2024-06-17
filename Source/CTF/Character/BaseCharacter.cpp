@@ -43,12 +43,20 @@ ABaseCharacter::ABaseCharacter()
 
 float ABaseCharacter::TakeDamage(float DamageTaken, struct FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
 {
-    return CharInfoComponent->TakeDamage(DamageTaken);
+    if (CharInfoComponent)
+    {
+        return CharInfoComponent->TakeDamage(DamageTaken);
+    }
+
+    return 0.0f;
 }
 
 ETeamID ABaseCharacter::GetTeamID() const
 {
-    if (ACTFPlayerState* CTFPlayerState = Cast<ACTFPlayerState>(GetPlayerState())) return CTFPlayerState->GetTeamID();
+    if (ACTFPlayerState* CTFPlayerState = Cast<ACTFPlayerState>(GetPlayerState()))
+    {
+        return CTFPlayerState->GetTeamID();
+    }
 
     return ETeamID::NoTeam;
 }
@@ -65,12 +73,18 @@ bool ABaseCharacter::IsDead() const
 
 void ABaseCharacter::TakeFlag(ETeamID TeamID)
 {
-    if (!CharInfoComponent->IsHoldingFlag()) CharInfoComponent->SetHoldingFlag(true, TeamID);
+    if (!CharInfoComponent->IsHoldingFlag())
+    {
+        CharInfoComponent->SetHoldingFlag(true, TeamID);
+    }
 }
 
 void ABaseCharacter::DropFlagInBaseZone()
 {
-    if (CharInfoComponent->IsHoldingFlag()) CharInfoComponent->SetHoldingFlag(false, ETeamID::NoTeam);
+    if (CharInfoComponent->IsHoldingFlag())
+    {
+        CharInfoComponent->SetHoldingFlag(false, ETeamID::NoTeam);
+    }
 }
 
 void ABaseCharacter::OnHealthChanged(float CurrentHealth)
@@ -96,23 +110,7 @@ void ABaseCharacter::OnHealthChanged(float CurrentHealth)
 
 void ABaseCharacter::OnDeath()
 {
-    GetCharacterMovement()->DisableMovement();
-
-    if (UCapsuleComponent* CapComp = GetCapsuleComponent())
-        CapComp->SetCollisionProfileName(TEXT("NoCollision"));
-
-    if (USkeletalMeshComponent* SkelMesh = GetMesh())
-    {
-        // Enable physics simulation on the skeletal mesh
-        SkelMesh->SetSimulatePhysics(true);
-
-        // Set collision profile to ragdoll to handle physics interactions properly
-        SkelMesh->SetCollisionProfileName(TEXT("Ragdoll"));
-
-        // Optionally, apply an impulse to the character for immediate effect
-        FVector Impulse = FVector(0, 0, 1000.0f); // Example impulse
-        SkelMesh->AddImpulse(Impulse, NAME_None, true);
-    }
+    ToRagdoll();
 
     if (HasAuthority())
     {
@@ -123,6 +121,25 @@ void ABaseCharacter::OnDeath()
         
         ACTFPlayerController* CTFPlayerController = Cast<ACTFPlayerController>(GetController());
         CTFPlayerController->OnCharacterDeath();
+    }
+}
+
+void ABaseCharacter::ToRagdoll()
+{
+    GetCharacterMovement()->DisableMovement();
+
+    if (UCapsuleComponent* CapComp = GetCapsuleComponent())
+    {
+        CapComp->SetCollisionProfileName(TEXT("NoCollision"));
+    }
+
+    if (USkeletalMeshComponent* SkelMesh = GetMesh())
+    {
+        SkelMesh->SetSimulatePhysics(true);
+        SkelMesh->SetCollisionProfileName(TEXT("Ragdoll"));
+
+        FVector Impulse = FVector(0, 0, 1000.0f);
+        SkelMesh->AddImpulse(Impulse, NAME_None, true);
     }
 }
 
@@ -153,7 +170,7 @@ void ABaseCharacter::Fire()
     if (UWorld* World = GetWorld())
     {
         bCanFire = false;
-        GetWorld()->GetTimerManager().SetTimer(FireRateTimerHandle, this, &ABaseCharacter::ResetCanFire, FireRate, false);
+        World->GetTimerManager().SetTimer(FireRateTimerHandle, this, &ABaseCharacter::ResetCanFire, FireRate, false);
         HandleFire();
     }
 }
@@ -170,43 +187,38 @@ void ABaseCharacter::OnHoldingFlagChanged(bool bIsHoldingFlag)
 
 void ABaseCharacter::HandleFire_Implementation()
 {
-    // Now send a trace from the end of our gun to see if we should hit anything
-    APlayerController* PlayerController = Cast<APlayerController>(GetController());
-
     FVector ShootDir = FVector::ZeroVector;
     FVector StartTrace = FVector::ZeroVector;
-
-    if (PlayerController)
+    
+    if (APlayerController* PlayerController = Cast<APlayerController>(GetController()))
     {
-        // Calculate the direction of fire and the start location for trace
         FRotator CamRot;
         PlayerController->GetPlayerViewPoint(StartTrace, CamRot);
         ShootDir = CamRot.Vector();
 
-        // Adjust trace so there is nothing blocking the ray between the camera and the pawn, and calculate distance from adjusted start
         StartTrace = StartTrace + ShootDir * ((GetActorLocation() - StartTrace) | ShootDir);
     }
 
-    // Calculate endpoint of trace
     const FVector EndTrace = StartTrace + ShootDir * 10000.0f;
 
-    // Perform trace to retrieve hit info
     FCollisionQueryParams TraceParams(SCENE_QUERY_STAT(WeaponTrace), true, GetInstigator());
     TraceParams.bReturnPhysicalMaterial = true;
 
     FHitResult OutHit(ForceInit);
-    GetWorld()->LineTraceSingleByChannel(OutHit, StartTrace, EndTrace, COLLISION_WEAPON, TraceParams);
+    if (UWorld* World = GetWorld())
+    {
+        World->LineTraceSingleByChannel(OutHit, StartTrace, EndTrace, COLLISION_WEAPON, TraceParams);
 
-    // Calculate spawn location and rotation of projectile
-    FVector SpawnLocation = GetActorLocation() + (GetControlRotation().Vector() * 100.0f) + (GetActorUpVector() * 50.0f);
-    FRotator SpawnRotation = GetControlRotation();
-    if (OutHit.bBlockingHit) SpawnRotation = UKismetMathLibrary::FindLookAtRotation(SpawnLocation, OutHit.Location);
+        FVector SpawnLocation = GetActorLocation() + (GetControlRotation().Vector() * 100.0f) + (GetActorUpVector() * 50.0f);
+        FRotator SpawnRotation = GetControlRotation();
+        if (OutHit.bBlockingHit) SpawnRotation = UKismetMathLibrary::FindLookAtRotation(SpawnLocation, OutHit.Location);
 
-    FActorSpawnParameters SpawnParameters;
-    SpawnParameters.Instigator = GetInstigator();
-    SpawnParameters.Owner = this;
+        FActorSpawnParameters SpawnParameters;
+        SpawnParameters.Instigator = GetInstigator();
+        SpawnParameters.Owner = this;
 
-    ACTFProjectile* spawnedProjectile = GetWorld()->SpawnActor<ACTFProjectile>(ProjectileClass, SpawnLocation, SpawnRotation, SpawnParameters);
+        ACTFProjectile* spawnedProjectile = World->SpawnActor<ACTFProjectile>(ProjectileClass, SpawnLocation, SpawnRotation, SpawnParameters);
+    }
 }
 
 void ABaseCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const

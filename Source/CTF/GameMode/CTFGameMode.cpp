@@ -110,17 +110,14 @@ void ACTFGameMode::SpawnCharacterBySelectedTeam(ACTFPlayerController* CTFPlayerC
     if (TeamPlayerStarts.Num() > 0)
     {
         int32 RandomIndex = FMath::RandRange(0, TeamPlayerStarts.Num() - 1);
-        APlayerStart* ChosenStart = Cast<APlayerStart>(TeamPlayerStarts[RandomIndex]);
-
-        if (ChosenStart)
+        
+        if (APlayerStart* ChosenStart = Cast<APlayerStart>(TeamPlayerStarts[RandomIndex]))
         {
             SpawnLocation = ChosenStart->GetActorLocation();
             SpawnRotation = ChosenStart->GetActorRotation();
 
-            ACTFCharacter* NewCharacter = GetWorld()->SpawnActor<ACTFCharacter>(CTFCharacterClass, SpawnLocation, SpawnRotation);
-            if (NewCharacter)
+            if (ACTFCharacter* NewCharacter = GetWorld()->SpawnActor<ACTFCharacter>(CTFCharacterClass, SpawnLocation, SpawnRotation))
             {
-                // Possess the character with the player controller
                 CTFPlayerController->Possess(NewCharacter);
             }
         }

@@ -51,7 +51,10 @@ protected:
 	UFUNCTION()
 	virtual void OnDeath();
 
-	UFUNCTION(BlueprintCallable, Category = "Death")
+	UFUNCTION(BlueprintCallable, Category = Death)
+	void ToRagdoll();
+
+	UFUNCTION(BlueprintCallable, Category = Death)
 	void SpawnDroppedFlag();
 
 	UFUNCTION()

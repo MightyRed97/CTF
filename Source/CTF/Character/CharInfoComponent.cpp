@@ -76,16 +76,6 @@ void UCharInfoComponent::SetHoldingFlag(bool bIsHolding, ETeamID TeamID)
 	}
 }
 
-//void UCharInfoComponent::SetBaseZoneEntered(bool bIsEntered)
-//{
-//	if (GetOwnerRole() == ROLE_Authority)
-//	{
-//		bIsBaseZoneEntered = bIsEntered;
-//
-//		OnRep_BaseZoneEntered();
-//	}
-//}
-
 void UCharInfoComponent::OnRep_CurrentHealth()
 {
 	OnHealthChanged.Broadcast(CurrentHealth);
@@ -116,5 +106,4 @@ void UCharInfoComponent::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& O
 	DOREPLIFETIME(UCharInfoComponent, CurrentHealth);
 	DOREPLIFETIME(UCharInfoComponent, bIsDead);
 	DOREPLIFETIME(UCharInfoComponent, bIsHoldingFlag);
-	//DOREPLIFETIME(UCharInfoComponent, bIsBaseZoneEntered);
 }
