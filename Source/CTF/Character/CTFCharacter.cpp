@@ -60,7 +60,7 @@ ACTFCharacter::ACTFCharacter()
 	PlayerTagWidgetComponent = CreateDefaultSubobject<UWidgetComponent>(TEXT("HealthWidgetComponent"));
 	PlayerTagWidgetComponent->SetupAttachment(GetMesh());
 	PlayerTagWidgetComponent->SetWidgetSpace(EWidgetSpace::Screen);
-	PlayerTagWidgetComponent->SetDrawSize(FVector2D(64, 64));
+	PlayerTagWidgetComponent->SetDrawSize(FVector2D(32, 32));
 	static ConstructorHelpers::FClassFinder<UUserWidget> HealthBarWidgetClass(TEXT("/Game/CTF/UMG/WB_PlayerTag"));
 	if (HealthBarWidgetClass.Succeeded())
 	{

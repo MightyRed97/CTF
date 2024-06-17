@@ -5,6 +5,7 @@
 #include "Components/TextBlock.h"
 
 #include "GameMode/CTFPlayerController.h"
+#include "GameMode/CTFPlayerState.h"
 #include "Character/BaseCharacter.h"
 #include "Character/CharInfoComponent.h"
 
@@ -89,4 +90,20 @@ float UPlayerHUD::GetHealthPercent() const
     }
 
     return 0.0f;
+}
+
+FText UPlayerHUD::GetRemainingTimeText() const
+{
+    FString TimeString = TEXT("00:00");
+    
+    if (ACTFPlayerController* CTFPlayerController = Cast<ACTFPlayerController>(GetOwningPlayer()))
+    {
+        if (ACTFPlayerState* CTFPlayerState = Cast<ACTFPlayerState>(CTFPlayerController->PlayerState))
+        {
+            int32 RemainingTime = CTFPlayerState->GetMatchTimeRemaining();
+            TimeString = FString::Printf(TEXT("%02d:%02d"), RemainingTime / 60, RemainingTime % 60);
+        }
+    }
+
+    return FText::FromString(TimeString);
 }

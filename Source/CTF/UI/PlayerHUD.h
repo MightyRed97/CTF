@@ -24,9 +24,12 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Team | Kill")
 	void UpdateTeamKill(ETeamID TeamID, int32 Kill);
 
-	UFUNCTION(BlueprintCallable, Category = "Match Result")
+	UFUNCTION(BlueprintCallable, Category = "Match | Result")
 	void ShowMatchResult(EMatchResult MatchResult);
 
 	UFUNCTION(BlueprintCallable, Category = Health)
 	float GetHealthPercent() const;
+
+	UFUNCTION(BlueprintCallable, Category = "Match | Time")
+	FText GetRemainingTimeText() const;
 };

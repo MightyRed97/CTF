@@ -29,6 +29,9 @@ public:
 	UFUNCTION(BlueprintCallable, Category = Team)
 	void SetTeamID(ETeamID ID);
 
+	UFUNCTION(BlueprintPure, Category = Time)
+	FORCEINLINE int32 GetMatchTimeRemaining() const { return MatchTimeRemainingSeconds; }
+
 	UFUNCTION(BlueprintCallable, Category = Time)
 	void SetMatchTimeRemaining(int32 TimeRemaining);
 

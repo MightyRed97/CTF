@@ -96,9 +96,6 @@ void ABaseCharacter::OnHealthChanged(float CurrentHealth)
 
 void ABaseCharacter::OnDeath()
 {
-    ACTFPlayerController* CTFPlayerController = Cast<ACTFPlayerController>(GetController());
-    CTFPlayerController->OnCharacterDeath();
-    
     GetCharacterMovement()->DisableMovement();
 
     if (UCapsuleComponent* CapComp = GetCapsuleComponent())
@@ -117,9 +114,15 @@ void ABaseCharacter::OnDeath()
         SkelMesh->AddImpulse(Impulse, NAME_None, true);
     }
 
-    if (HasAuthority() && CharInfoComponent->IsHoldingFlag())
+    if (HasAuthority())
     {
-        SpawnDroppedFlag();
+        if (CharInfoComponent->IsHoldingFlag())
+        {
+            SpawnDroppedFlag();
+        }
+        
+        ACTFPlayerController* CTFPlayerController = Cast<ACTFPlayerController>(GetController());
+        CTFPlayerController->OnCharacterDeath();
     }
 }
 

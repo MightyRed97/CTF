@@ -52,7 +52,7 @@ float UCharInfoComponent::TakeDamage(float DamageTaken)
 
 void UCharInfoComponent::SetCurrentHealth(float HealthValue)
 {
-	if (GetOwnerRole() == ROLE_Authority)
+	if (GetOwnerRole() == ROLE_Authority && !bIsDead)
 	{
 		CurrentHealth = FMath::Clamp(HealthValue, 0.f, MaxHealth);
 		if (CurrentHealth <= 0.0f)

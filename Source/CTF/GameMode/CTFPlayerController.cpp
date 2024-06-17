@@ -91,19 +91,16 @@ void ACTFPlayerController::ToggleInputMode(bool bIsUIMode)
 
 void ACTFPlayerController::OnCharacterDeath()
 {
-    if (HasAuthority())
-    {
-        ACTFPlayerState* CTFPlayerState = Cast<ACTFPlayerState>(PlayerState);
-        if (!CTFPlayerState) return;
+    ACTFPlayerState* CTFPlayerState = Cast<ACTFPlayerState>(PlayerState);
+    if (!CTFPlayerState) return;
 
-        ETeamID TeamID = CTFPlayerState->GetTeamID();
-        
-        if (UWorld* World = GetWorld())
+    ETeamID TeamID = CTFPlayerState->GetTeamID();
+
+    if (UWorld* World = GetWorld())
+    {
+        if (ACTFGameMode* CTFGameMode = Cast<ACTFGameMode>(World->GetAuthGameMode()))
         {
-            if (ACTFGameMode* CTFGameMode = Cast<ACTFGameMode>(World->GetAuthGameMode()))
-            {
-                CTFGameMode->OnPlayerKilled(this, TeamID);
-            }
+            CTFGameMode->OnPlayerKilled(this, TeamID);
         }
     }
 }

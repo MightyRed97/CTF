@@ -7,7 +7,7 @@ DEFINE_LOG_CATEGORY(LogCTFGameState);
 
 ACTFGameState::ACTFGameState()
 {
-	MatchDurationSeconds = 30;
+	MatchDurationSeconds = 60;
 }
 
 int32 ACTFGameState::GetTeamScore(ETeamID TeamID) const
